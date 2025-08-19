@@ -1,27 +1,106 @@
-# React + TypeScript + Vite
+# The Wild Oasis - Hotel Management Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, responsive dashboard application for managing guests and operations at The Wild Oasis hotel chain. Built with cutting-edge web technologies to provide an intuitive and efficient hotel management experience.
 
-Currently, two official plugins are available:
+## 🏨 About The Project
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+The Wild Oasis Hotel Management Dashboard is a comprehensive web application designed to streamline hotel operations, manage guest information, and provide real-time insights into hotel performance. This dashboard serves as the central hub for hotel staff to handle reservations, guest services, and administrative tasks.
 
-## Expanding the ESLint configuration
+## 🚀 Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- **Frontend Framework**: React 18 with TypeScript
+- **Build Tool**: Vite 4 (for fast development and optimized builds)
+- **State Management**: React Query (TanStack Query) for server state management
+- **Routing**: React Router for seamless navigation
+- **Styling**: Modern CSS with responsive design principles
+- **Type Safety**: Full TypeScript implementation
+- **Development**: Hot Module Replacement (HMR) for rapid development
 
-- Configure the top-level `parserOptions` property like this:
+## ✨ Key Features
 
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
+- **Guest Management**: Complete guest profiles, check-in/check-out tracking
+- **Reservation System**: Booking management with real-time availability
+- **Dashboard Analytics**: Performance metrics and occupancy statistics
+- **Responsive Design**: Works seamlessly across desktop, tablet, and mobile devices
+- **Real-time Updates**: Live data synchronization across all connected devices
+- **User Authentication**: Secure access control for hotel staff
+- **Multi-hotel Support**: Manage multiple hotel locations from a single dashboard
+
+## 🛠️ Development Setup
+
+### Prerequisites
+
+- Node.js (version 16 or higher)
+- npm or yarn package manager
+
+### Installation
+
+1. Clone the repository:
+
+```bash
+git clone <repository-url>
+cd the-wild-oasis
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Start the development server:
+
+```bash
+npm run dev
+```
+
+4. Open your browser and navigate to `http://localhost:5173`
+
+### Available Scripts
+
+- `npm run dev` - Start development server with HMR
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build locally
+- `npm run lint` - Run ESLint for code quality checks
+
+## 📁 Project Structure
+
+```
+src/
+├── components/     # Reusable UI components
+├── pages/         # Page components and routing
+├── hooks/         # Custom React hooks
+├── services/      # API services and data fetching
+├── types/         # TypeScript type definitions
+├── utils/         # Utility functions
+└── styles/        # Global styles and CSS modules
+```
+
+## 🔧 Configuration
+
+The project uses Vite for fast development and optimized builds. Key configuration files:
+
+- `vite.config.ts` - Vite configuration
+- `tsconfig.json` - TypeScript configuration
+- `eslintrc.json` - ESLint rules and code quality settings
+
+## 🚀 Deployment
+
+The application is optimized for production deployment with:
+
+- Tree-shaking for minimal bundle size
+- Code splitting for optimal loading performance
+- TypeScript compilation for type safety
+- ESLint integration for code quality
+
+## 🤝 Contributing
+
+This project is designed for hotel management teams. For development contributions, please follow the established coding standards and ensure all TypeScript types are properly defined.
+
+## 📄 License
+
+This project is proprietary software for The Wild Oasis hotel chain.
+
+---
+
+**Built with ❤️ for The Wild Oasis Hotel Management Team**
