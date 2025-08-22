@@ -10,10 +10,21 @@ import Account from "./pages/Account";
 import GlobalStyles from "./styles/GlobalStyle";
 import AppLayout from "./ui/AppLayout";
 import { SidebarProvider } from "./contexts/SidebarContext";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 60 * 1000, // 1 minute
+    },
+  },
+});
 
 function App() {
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
+      <ReactQueryDevtools initialIsOpen={false} />
       <GlobalStyles />
       <SidebarProvider>
         <BrowserRouter>
@@ -33,7 +44,7 @@ function App() {
           </Routes>
         </BrowserRouter>
       </SidebarProvider>
-    </>
+    </QueryClientProvider>
   );
 }
 
