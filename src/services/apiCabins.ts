@@ -1,5 +1,5 @@
 import { Cabin } from "../types/cabin";
-import supabase from "./supabase";
+import supabase, { supabaseUrl } from "./supabase";
 
 /**
  * Creates a promise that rejects after a specified timeout
@@ -64,14 +64,53 @@ export async function getCabins() {
 }
 
 /**
- * Delete a cabin from database
+ * Delete a cabin from database and its associated image from storage
  */
 export async function deleteCabin(id: number) {
+  // First, get the cabin data to extract the image URL
+  const { data: cabinData, error: fetchError } = await supabase
+    .from("cabins")
+    .select("image")
+    .eq("id", id)
+    .single();
+
+  if (fetchError) {
+    console.error("Error fetching cabin:", fetchError);
+    throw new Error("Cabin could not be found");
+  }
+
+  // Delete the cabin from database
   const { data, error } = await supabase.from("cabins").delete().eq("id", id);
 
   if (error) {
     console.error("Database error:", error);
     throw new Error("Cabin could not be deleted");
+  }
+
+  // If cabin has an image, try to delete it from storage
+  if (cabinData.image) {
+    try {
+      // Extract image name from the URL
+      // URL format: https://supabase-url/storage/v1/object/public/cabin-images/image-name
+      const imageName = cabinData.image;
+      if (imageName) {
+        const { error: storageError } = await supabase.storage
+          .from("cabin-images")
+          .remove([imageName]);
+
+        if (storageError) {
+          console.error("Storage error (image deletion):", storageError);
+          // Don't throw error here as the cabin was already deleted
+          // Just log the error for debugging
+        } else {
+          console.log("Image deleted successfully:", imageName);
+        }
+      }
+    } catch (storageError) {
+      console.error("Error deleting image from storage:", storageError);
+      // Don't throw error here as the cabin was already deleted
+      // Just log the error for debugging
+    }
   }
 
   return data;
@@ -80,11 +119,46 @@ export async function deleteCabin(id: number) {
 /**
  * Create a new cabin
  */
-export async function createCabin(newCabin: Cabin) {
-  const { data, error } = await supabase.from("cabins").insert(newCabin);
+export async function createCabin(
+  newCabin: Omit<Cabin, "id" | "image"> & { image: File | null }
+) {
+  console.log("newCabin:", newCabin);
+  console.log("image:", newCabin.image);
+
+  // Check if image exists
+  if (!newCabin.image) {
+    throw new Error("Please select an image");
+  }
+
+  // Upload image first
+  const imageName = `${Math.random()}-${newCabin.image.name}`.replace(
+    /\//g,
+    ""
+  );
+  console.log(imageName);
+  const imagePath = `${supabaseUrl}/storage/v1/object/public/cabin-images/${imageName}`;
+  console.log(imagePath);
+
+  const { error: storageError } = await supabase.storage
+    .from("cabin-images")
+    .upload(imageName, newCabin.image);
+
+  if (storageError) {
+    console.error("Storage error:", storageError);
+    throw new Error("Image could not be uploaded");
+  }
+
+  // Insert cabin data with image URL
+  const { data, error } = await supabase
+    .from("cabins")
+    .insert([{ ...newCabin, image: imagePath }])
+    .select()
+    .single();
 
   if (error) {
     console.error("Database error:", error);
+    // If cabin creation fails, try to delete the uploaded image
+    await supabase.storage.from("cabin-images").remove([imageName]);
     throw new Error("Cabin could not be created");
   }
 

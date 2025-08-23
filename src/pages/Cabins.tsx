@@ -3,11 +3,12 @@ import CabinTable from "../features/cabins/CabinTable";
 import Heading from "../ui/Heading";
 import Row from "../ui/Row";
 import Spinner from "../ui/Spinner";
-//import CabinForm from "../features/cabins/CabinForm";
+import CabinForm from "../features/cabins/CabinForm";
 import Button from "../ui/Button";
 
 function Cabins() {
   const [showForm, setShowForm] = useState(false);
+
   return (
     <>
       <Row type="horizontal">
@@ -17,10 +18,17 @@ function Cabins() {
       <Row>
         <Suspense fallback={<Spinner />}>
           <CabinTable />
-          <Button onClick={() => setShowForm(!showForm)}>Add new cabin</Button>
+          <Button onClick={() => setShowForm((show) => !show)}>
+            {showForm ? "Hide form" : "Add new cabin"}
+          </Button>
         </Suspense>
       </Row>
-      {/* {showForm && <CabinForm />} */}
+
+      {showForm && (
+        <Row>
+          <CabinForm onCloseModal={() => setShowForm(false)} />
+        </Row>
+      )}
     </>
   );
 }

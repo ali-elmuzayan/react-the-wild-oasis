@@ -7,7 +7,7 @@ export interface Cabin {
   maxCapacity: number; // Maximum number of guests the cabin can accommodate
   regularPrice: number; // Standard price per night
   discount: number | null; // Optional discount amount (null if no discount)
-  image: string; // URL or path to the cabin's image
+  image: string | File; // URL or path to the cabin's image
   description: string; // Detailed description of the cabin
   createdAt?: string; // Optional timestamp when the cabin was created
   updatedAt?: string; // Optional timestamp when the cabin was last updated
