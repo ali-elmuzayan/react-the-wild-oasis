@@ -3,7 +3,7 @@ import CabinTable from "../features/cabins/CabinTable";
 import Heading from "../ui/Heading";
 import Row from "../ui/Row";
 import Spinner from "../ui/Spinner";
-import CabinForm from "../features/cabins/CabinForm";
+//import CabinForm from "../features/cabins/CabinForm";
 import Button from "../ui/Button";
 
 function Cabins() {
@@ -20,7 +20,7 @@ function Cabins() {
           <Button onClick={() => setShowForm(!showForm)}>Add new cabin</Button>
         </Suspense>
       </Row>
-      {showForm && <CabinForm />}
+      {/* {showForm && <CabinForm />} */}
     </>
   );
 }

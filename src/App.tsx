@@ -1,4 +1,3 @@
-// Main application component that sets up the app structure and routing
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import Bookings from "./pages/Booking";
@@ -13,6 +12,7 @@ import AppLayout from "./ui/AppLayout";
 import { SidebarProvider } from "./contexts/SidebarContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { Toaster } from "react-hot-toast";
 
 // Configure React Query client with default options
 // staleTime: How long data is considered fresh (1 minute)
@@ -20,6 +20,8 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 60 * 1000, // 1 minute - data stays fresh for 1 minute
+      retry: 1, // Only retry once
+      retryDelay: 1000, // Wait 1 second before retrying
     },
   },
 });
@@ -60,6 +62,28 @@ function App() {
           </Routes>
         </BrowserRouter>
       </SidebarProvider>
+
+      {/* Toaster */}
+      <Toaster
+        position="top-center"
+        gutter={12}
+        containerStyle={{ margin: "8px" }}
+        toastOptions={{
+          success: {
+            duration: 3000,
+          },
+          error: {
+            duration: 5000,
+          },
+          style: {
+            fontSize: "16px",
+            maxWidth: "500px",
+            padding: "16px 24px",
+            backgroundColor: "var(--color-grey-0)",
+            color: "var(--color-grey-700)",
+          },
+        }}
+      />
     </QueryClientProvider>
   );
 }

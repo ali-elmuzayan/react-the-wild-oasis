@@ -2,9 +2,11 @@
 import styled from "styled-components";
 // import type { Cabin } from "../../types/cabin";
 import CabinRow from "./CabinRow";
-import { getCabins } from "../../services/apiCabins";
+import { getCabinsWithTimeout } from "../../services/apiCabins";
 import { useQuery } from "@tanstack/react-query";
 import Spinner from "../../ui/Spinner";
+import { useEffect } from "react";
+import toast from "react-hot-toast";
 
 // interface CabinTableProps {
 //   cabins?: Cabin[];
@@ -24,7 +26,6 @@ const Table = styled.div`
 // Table header with grid layout for column alignment
 const TableHeader = styled.header`
   display: grid;
-  // Grid columns: image, cabin name, capacity, price, discount, actions
   grid-template-columns: 0.6fr 1.8fr 2.2fr 1fr 1fr 1fr;
   column-gap: 2.4rem; // Space between columns
   align-items: center; // Center items vertically
@@ -39,11 +40,27 @@ const TableHeader = styled.header`
 `;
 
 function CabinTable() {
-  // Fetch cabins data using React Query
-  const { isLoading, data: cabins } = useQuery({
+  // Fetch cabins data using React Query with timeout
+  const {
+    isLoading,
+    data: cabins,
+    error,
+  } = useQuery({
     queryKey: ["cabins"], // Unique key for caching
-    queryFn: () => getCabins(), // Function to fetch data
+    queryFn: () => getCabinsWithTimeout(), // Function to fetch data with timeout
   });
+
+  // Handle timeout and other errors with toast notification
+  useEffect(() => {
+    if (error) {
+      const errorMessage =
+        error instanceof Error && error.message === "Request timeout"
+          ? "Something went wrong with the server. Please try again later."
+          : "Failed to load cabins. Please try again.";
+
+      toast.error(errorMessage);
+    }
+  }, [error]);
 
   // Show loading spinner while data is being fetched
   if (isLoading) return <Spinner />;
@@ -84,7 +101,6 @@ function CabinTable() {
         <div>Discount</div>
       </TableHeader>
 
-    
       {cabins.map((cabin) => (
         <CabinRow key={cabin.id} cabin={cabin} />
       ))}

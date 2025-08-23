@@ -9,6 +9,7 @@ import { formatCurrency } from "../../utils/helpers";
 import { HiPencil, HiSquare2Stack, HiTrash } from "react-icons/hi2";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteCabin } from "../../services/apiCabins";
+import toast from "react-hot-toast";
 // import { useCreateCabin } from "./useCreateCabin";
 
 // Table row container with grid layout matching the header
@@ -54,16 +55,16 @@ const Price = styled.div`
 const Discount = styled.div`
   font-family: "Sono";
   font-weight: 500;
-  color: var(--color-green-700); 
+  color: var(--color-green-700);
 `;
 
 // Props interface for the component
 interface CabinRowProps {
-  cabin: Cabin; 
+  cabin: Cabin;
 }
 
 function CabinRow({ cabin }: CabinRowProps) {
-  const queryClient = useQueryClient(); 
+  const queryClient = useQueryClient();
 
   const {
     id: cabinId,
@@ -76,14 +77,14 @@ function CabinRow({ cabin }: CabinRowProps) {
   } = cabin;
 
   // handle delete mutation
-  const {isLoading: isDeleting, mutate} = useMutation({
+  const { isLoading: isDeleting, mutate } = useMutation({
     mutationFn: deleteCabin,
     onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ["cabins"]})
+      toast.success("Cabin deleted successfully");
+      queryClient.invalidateQueries({ queryKey: ["cabins"] });
     },
-    onError: (err: Error) => alert(err.message)
-  })
-
+    onError: (err: Error) => toast.error(err.message),
+  });
 
   return (
     <>
