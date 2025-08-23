@@ -2,7 +2,7 @@
 import styled from "styled-components";
 // import type { Cabin } from "../../types/cabin";
 import CabinRow from "./CabinRow";
-import { getCabins } from "../../services/getCabins";
+import { getCabins } from "../../services/apiCabins";
 import { useQuery } from "@tanstack/react-query";
 import Spinner from "../../ui/Spinner";
 
@@ -84,7 +84,7 @@ function CabinTable() {
         <div>Discount</div>
       </TableHeader>
 
-      {/* Render each cabin as a row */}
+    
       {cabins.map((cabin) => (
         <CabinRow key={cabin.id} cabin={cabin} />
       ))}

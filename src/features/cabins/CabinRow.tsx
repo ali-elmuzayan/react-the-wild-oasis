@@ -7,6 +7,8 @@ import type { Cabin } from "../../types/cabin";
 // import { useDeleteCabin } from "./useDeleteCabin";
 import { formatCurrency } from "../../utils/helpers";
 import { HiPencil, HiSquare2Stack, HiTrash } from "react-icons/hi2";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { deleteCabin } from "../../services/apiCabins";
 // import { useCreateCabin } from "./useCreateCabin";
 
 // Table row container with grid layout matching the header
@@ -14,9 +16,9 @@ const TableRow = styled.div`
   display: grid;
   // Grid columns: image, cabin name, capacity, price, discount, actions
   grid-template-columns: 0.6fr 1.8fr 2.2fr 1fr 1fr 1fr;
-  column-gap: 2.4rem; // Space between columns
-  align-items: center; // Center items vertically
-  padding: 1.4rem 2.4rem; // Padding for row content
+  column-gap: 2.4rem;
+  align-items: center;
+  padding: 1.4rem 2.4rem;
 
   // Add border between rows (except the last one)
   &:not(:last-child) {
@@ -50,25 +52,21 @@ const Price = styled.div`
 
 // Discount styling with green color
 const Discount = styled.div`
-  font-family: "Sono"; // Monospace font for better alignment
-  font-weight: 500; // Medium weight
-  color: var(--color-green-700); // Green color for discounts
+  font-family: "Sono";
+  font-weight: 500;
+  color: var(--color-green-700); 
 `;
 
 // Props interface for the component
 interface CabinRowProps {
-  cabin: Cabin; // Cabin data to display
+  cabin: Cabin; 
 }
 
 function CabinRow({ cabin }: CabinRowProps) {
-  // Commented out state and hooks for future functionality
-  //   const [showForm, setShowForm] = useState(false);
-  //   const { isDeleting, deleteCabin } = useDeleteCabin();
-  //   const { isCreating, createCabin } = useCreateCabin();
+  const queryClient = useQueryClient(); 
 
-  // Destructure cabin properties for display
   const {
-    // id: cabinId, // Commented out for future use
+    id: cabinId,
     name,
     maxCapacity,
     regularPrice,
@@ -77,34 +75,23 @@ function CabinRow({ cabin }: CabinRowProps) {
     // description, // Commented out for future use
   } = cabin;
 
-  // Commented out duplicate function for future implementation
-  //   function handleDuplicate() {
-  //     createCabin({
-  //       name: `Copy of ${name}`,
-  //       maxCapacity,
-  //       regularPrice,
-  //       discount,
-  //       image,
-  //       description,
-  //     });
-  //   }
+  // handle delete mutation
+  const {isLoading: isDeleting, mutate} = useMutation({
+    mutationFn: deleteCabin,
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ["cabins"]})
+    },
+    onError: (err: Error) => alert(err.message)
+  })
+
 
   return (
     <>
       <TableRow role="row">
-        {/* Cabin image */}
         <Img src={image} />
-
-        {/* Cabin name */}
         <Cabin>{name}</Cabin>
-
-        {/* Capacity information */}
         <div>Fits up to {maxCapacity} guests</div>
-
-        {/* Regular price */}
         <Price>{formatCurrency(regularPrice)}</Price>
-
-        {/* Discount price or dash if no discount */}
         {discount ? (
           <Discount>{formatCurrency(discount)}</Discount>
         ) : (
@@ -119,7 +106,7 @@ function CabinRow({ cabin }: CabinRowProps) {
           <button>
             <HiPencil /> {/* Edit icon */}
           </button>
-          <button>
+          <button onClick={() => mutate(cabinId)} disabled={isDeleting}>
             <HiTrash /> {/* Delete icon */}
           </button>
         </div>
